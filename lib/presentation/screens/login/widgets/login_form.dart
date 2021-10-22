@@ -50,7 +50,13 @@ class _LoginFormState extends State<LoginForm> {
           ),
           SizedBox(height: getProportionateScreenHeight(40)),
           DefaultButton(
-            text: "Sign In",
+            widget: const Text(
+              'Sign In',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             press: () {
               if (!_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();

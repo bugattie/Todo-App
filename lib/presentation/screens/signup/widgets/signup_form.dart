@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/config/constants.dart';
 import 'package:todo/config/size_config.dart';
+import 'package:todo/logic/bloc/registration_bloc.dart';
+import 'package:todo/main.dart';
+import 'package:todo/presentation/screens/home/home_screen.dart';
 import 'package:todo/presentation/widgets/default_button.dart';
 
 class SignUpForm extends StatefulWidget {
@@ -52,18 +56,50 @@ class _SignUpFormState extends State<SignUpForm> {
           buildConfirmPasswordFormField(),
           SizedBox(height: getProportionateScreenHeight(40)),
           DefaultButton(
-            text: "Sign Up",
+            widget: BlocConsumer<RegistrationBloc, RegistrationState>(
+              builder: (context, state) {
+                if (state is RegistrationInitial) {
+                  return const Text(
+                    'Sign Up',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                } else if (state is RegistrationLoading) {
+                  return const CircularProgressIndicator(
+                    color: Colors.white,
+                  );
+                } else if (state is RegistrationFailure) {
+                  return AlertDialog(
+                    content: Text(state.errorMessage),
+                  );
+                }
+                return Container();
+              },
+              listener: (context, state) {
+                if (state is RegistrationSuccess) {
+                  navigateToHomeScreen(context);
+                }
+              },
+            ),
             press: () {
               if (!_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
 
-                // ...
+                BlocProvider.of<RegistrationBloc>(context).add(
+                  SignupButtonPressed(_email, _password, _userName),
+                );
               }
             },
           ),
         ],
       ),
     );
+  }
+
+  void navigateToHomeScreen(BuildContext context) {
+    Navigator.pushReplacementNamed(context, HomeScreen.routeName);
   }
 
   TextFormField buildNameFormField() {
@@ -73,7 +109,7 @@ class _SignUpFormState extends State<SignUpForm> {
       decoration: const InputDecoration(
         labelText: "Username",
       ),
-      onSaved: (value) => _password = value!,
+      onSaved: (value) => _userName = value!,
       onFieldSubmitted: (_) {
         FocusScope.of(context).requestFocus(emailFocusNode);
       },
@@ -93,7 +129,7 @@ class _SignUpFormState extends State<SignUpForm> {
       decoration: const InputDecoration(
         labelText: "Email",
       ),
-      onSaved: (value) => _userName = value!,
+      onSaved: (value) => _email = value!,
       onFieldSubmitted: (_) {
         FocusScope.of(context).requestFocus(passwordFocusNode);
       },

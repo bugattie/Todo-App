@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:todo/config/constants.dart';
 
 class DefaultButton extends StatelessWidget {
-  final String text;
+  final Widget widget;
   final Function press;
   const DefaultButton({
     Key? key,
-    required this.text,
+    required this.widget,
     required this.press,
   }) : super(key: key);
 
@@ -26,13 +26,7 @@ class DefaultButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        child: widget,
       ),
     );
   }

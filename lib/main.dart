@@ -1,27 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:todo/config/routes.dart';
 import 'package:todo/config/theme.dart';
+import 'package:todo/data/repositories/user_repositories.dart';
+import 'package:todo/logic/bloc/auth_bloc.dart';
+import 'package:todo/logic/utils/app_bloc_observer.dart';
+import 'package:todo/presentation/screens/home/home_screen.dart';
 import 'package:todo/presentation/screens/login/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  Bloc.observer = AppBlocOberserver();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
+
+  final UserRepository _userRepository = UserRepository(null);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Todo',
-      theme: theme(context),
-      initialRoute: LoginScreen.routeName,
-      routes: routes,
+    return RepositoryProvider.value(
+      value: _userRepository,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Todo',
+        theme: theme(context),
+        // initialRoute: LoginScreen.routeName,
+        // routes: routes,
+        home: BlocProvider(
+          create: (context) =>
+              AppBloc(userRepository: _userRepository)..add(AppStartedEvent()),
+          child: BlocBuilder<AppBloc, AuthState>(
+            builder: (context, state) {
+              if (state is AuthInitialState) {
+                return const CircularProgressIndicator();
+              } else if (state is AuthenticatedState) {
+                return const HomeScreen();
+              } else {
+                return const LoginScreen();
+              }
+            },
+          ),
+        ),
+        routes: routes,
+      ),
     );
   }
 }

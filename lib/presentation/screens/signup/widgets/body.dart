@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo/config/constants.dart';
 import 'package:todo/config/size_config.dart';
-import 'package:todo/presentation/screens/login/login_screen.dart';
 import 'package:todo/presentation/screens/signup/widgets/signup_form.dart';
 import 'package:todo/presentation/widgets/account_text.dart';
 
