@@ -8,6 +8,9 @@ ThemeData theme(BuildContext context) {
     visualDensity: VisualDensity.adaptivePlatformDensity,
     appBarTheme: const AppBarTheme(
       backwardsCompatibility: false,
+      backgroundColor: kPrimaryColor,
+      foregroundColor: Colors.white,
+      centerTitle: true,
     ),
     inputDecorationTheme: InputDecorationTheme(
       enabledBorder: outlineInputBorder,

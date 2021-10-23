@@ -15,7 +15,8 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
   late UserRepository _userRepository;
 
-  void _userRegistration(RegistrationEvent event, Emitter emit) async {
+  void _userRegistration(
+      RegistrationEvent event, Emitter<RegistrationState> emit) async {
     if (event is SignupButtonPressed) {
       emit(RegistrationLoading());
       try {

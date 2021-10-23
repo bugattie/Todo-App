@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:todo/config/constants.dart';
 
 import 'package:todo/config/routes.dart';
 import 'package:todo/config/theme.dart';
@@ -38,7 +40,7 @@ class MyApp extends StatelessWidget {
           child: BlocBuilder<AppBloc, AuthState>(
             builder: (context, state) {
               if (state is AuthInitialState) {
-                return const CircularProgressIndicator();
+                return const SplashScreen();
               } else if (state is AuthenticatedState) {
                 return const HomeScreen();
               } else {
@@ -48,6 +50,21 @@ class MyApp extends StatelessWidget {
           ),
         ),
         routes: routes,
+      ),
+    );
+  }
+}
+
+class SplashScreen extends StatelessWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: SpinKitCubeGrid(
+          color: kPrimaryColor,
+        ),
       ),
     );
   }
