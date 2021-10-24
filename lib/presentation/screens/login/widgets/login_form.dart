@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:todo/config/constants.dart';
 import 'package:todo/config/size_config.dart';
+import 'package:todo/logic/bloc/login_bloc.dart';
+import 'package:todo/presentation/screens/home/home_screen.dart';
 import 'package:todo/presentation/widgets/default_button.dart';
 
 class LoginForm extends StatefulWidget {
@@ -50,24 +53,50 @@ class _LoginFormState extends State<LoginForm> {
           ),
           SizedBox(height: getProportionateScreenHeight(40)),
           DefaultButton(
-            widget: const Text(
-              'Sign In',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+            widget: BlocConsumer<LoginBloc, LoginState>(
+              builder: (context, state) {
+                if (state is LoginInitial) {
+                  return const Text(
+                    'Sign In',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                } else if (state is LoginLoading) {
+                  return const CircularProgressIndicator(
+                    color: Colors.white,
+                  );
+                } else if (state is LoginFailure) {
+                  return AboutDialog(
+                    children: [Text(state.errorMessage)],
+                  );
+                }
+                return Container();
+              },
+              listener: (context, state) {
+                if (state is LoginSuccess) {
+                  navigateToHomeScreen(context);
+                }
+              },
             ),
             press: () {
-              if (!_formKey.currentState!.validate()) {
+              if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
 
-                // ...
+                BlocProvider.of<LoginBloc>(context).add(
+                  LogInButtonPressed(_email, _password),
+                );
               }
             },
           ),
         ],
       ),
     );
+  }
+
+  void navigateToHomeScreen(BuildContext context) {
+    Navigator.pushReplacementNamed(context, HomeScreen.routeName);
   }
 
   TextFormField buildEmailFormField() {

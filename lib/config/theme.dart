@@ -3,7 +3,7 @@ import 'package:todo/config/constants.dart';
 
 ThemeData theme(BuildContext context) {
   return ThemeData(
-    scaffoldBackgroundColor: kBackground,
+    scaffoldBackgroundColor: Colors.white,
     textTheme: Theme.of(context).textTheme.apply(displayColor: kTextColor),
     visualDensity: VisualDensity.adaptivePlatformDensity,
     appBarTheme: const AppBarTheme(

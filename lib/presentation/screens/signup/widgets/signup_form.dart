@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/config/constants.dart';
 import 'package:todo/config/size_config.dart';
 import 'package:todo/logic/bloc/registration_bloc.dart';
-import 'package:todo/main.dart';
 import 'package:todo/presentation/screens/home/home_screen.dart';
 import 'package:todo/presentation/widgets/default_button.dart';
 
@@ -84,9 +83,9 @@ class _SignUpFormState extends State<SignUpForm> {
               },
             ),
             press: () {
-              if (!_formKey.currentState!.validate()) {
+              _formKey.currentState!.save();
+              if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
-
                 BlocProvider.of<RegistrationBloc>(context).add(
                   SignupButtonPressed(_email, _password, _userName),
                 );
@@ -168,12 +167,16 @@ class _SignUpFormState extends State<SignUpForm> {
 
   TextFormField buildConfirmPasswordFormField() {
     return TextFormField(
+      focusNode: confirmPasswordFocusNode,
       textInputAction: TextInputAction.done,
       obscureText: true,
       decoration: const InputDecoration(
         labelText: "Confirm Password",
       ),
-      onSaved: (value) => _confirmPassword = value!,
+      onSaved: (value) => {
+        // print(value!)
+        _confirmPassword = value!
+      },
       validator: (value) {
         if (value!.isEmpty) {
           return kPassNullError;

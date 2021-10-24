@@ -37,11 +37,11 @@ class UserRepository {
 
   Future<bool> isSignedIn() async {
     final currentUser = _firebaseAuth.currentUser;
-    print(currentUser);
     return currentUser != null;
   }
 
   Future<UserModel> getUser() async {
+    print(_firebaseAuth.currentUser!.uid);
     final DocumentSnapshot document = await FirebaseFirestore.instance
         .collection('Users')
         .doc(_firebaseAuth.currentUser!.uid)
