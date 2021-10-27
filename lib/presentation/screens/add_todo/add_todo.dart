@@ -4,7 +4,10 @@ import './widgets/body.dart';
 
 class AddTodoScreen extends StatelessWidget {
   static const routeName = '/add-todo';
-  const AddTodoScreen({Key? key}) : super(key: key);
+  AddTodoScreen({Key? key}) : super(key: key);
+
+  final _formKey = GlobalKey<FormState>();
+  late String _description = '';
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +18,10 @@ class AddTodoScreen extends StatelessWidget {
             padding: const EdgeInsets.only(right: 10.0),
             child: TextButton(
               onPressed: () {
-                // ...
+                if (_formKey.currentState!.validate()) {
+                  _formKey.currentState!.save();
+                  print('Check $_description');
+                }
               },
               child: const Text(
                 'Add Todo',
@@ -25,7 +31,7 @@ class AddTodoScreen extends StatelessWidget {
           )
         ],
       ),
-      body: const Body(),
+      body: Body(_description, formKey: _formKey),
     );
   }
 }

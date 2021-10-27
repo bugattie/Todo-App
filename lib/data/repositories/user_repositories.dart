@@ -40,6 +40,10 @@ class UserRepository {
     return currentUser != null;
   }
 
+  Future<String> getUserId() async {
+    return (await _firebaseAuth.currentUser!.uid);
+  }
+
   Future<UserModel> getUser() async {
     print(_firebaseAuth.currentUser!.uid);
     final DocumentSnapshot document = await FirebaseFirestore.instance

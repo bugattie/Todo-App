@@ -5,7 +5,7 @@ final CollectionReference todoCollection =
     FirebaseFirestore.instance.collection('Todos');
 
 class TodoRepository {
-  static Future<void> addTodo(String uid, TodoModel todo) async {
+  Future<void> addTodo(String uid, TodoModel todo) async {
     return await todoCollection
         .doc(uid)
         .collection('userTodo')
@@ -13,8 +13,15 @@ class TodoRepository {
         .set(todo.toJson());
   }
 
-  static Stream<QuerySnapshot<Map<String, dynamic>>> requestTodoStream(
-      String uid) {
-    return todoCollection.doc(uid).collection('userTodo').snapshots();
+  Stream<List<TodoModel>> requestTodoStream(String uid) {
+    return todoCollection
+        .doc(uid)
+        .collection('userTodo')
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs
+          .map((doc) => TodoModel.fromEntity(TodoModel.fromJson(doc)))
+          .toList();
+    });
   }
 }

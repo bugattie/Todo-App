@@ -18,7 +18,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (event is LogInButtonPressed) {
       emit(LoginLoading());
       try {
-        _userRepository.signInWithCredentials(event.email, event.password);
+        await _userRepository.signInWithCredentials(
+            event.email, event.password);
 
         final UserModel userModel = await _userRepository.getUser();
         emit(LoginSuccess(userModel));

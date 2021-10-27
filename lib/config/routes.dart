@@ -8,5 +8,5 @@ final Map<String, WidgetBuilder> routes = {
   LoginScreen.routeName: (context) => const LoginScreen(),
   SignUpScreen.routeName: (context) => SignUpScreen(),
   HomeScreen.routeName: (context) => const HomeScreen(),
-  AddTodoScreen.routeName: (context) => const AddTodoScreen(),
+  AddTodoScreen.routeName: (context) => AddTodoScreen(),
 };
